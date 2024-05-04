@@ -9,6 +9,17 @@ builder.Services.AddDbContext<UserContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//added to access session
+builder.Services.AddDistributedMemoryCache();
+
+// Http Session options
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(120);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,8 +37,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseSession(); //Use HTTP sessions
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=User}/{action=Index}/{id?}");
 
 app.Run();

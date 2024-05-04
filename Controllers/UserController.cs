@@ -22,6 +22,7 @@ namespace ContactDirectory.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
+            Console.WriteLine("current session: " + HttpContext.Session.GetString("_UserSession"));
             return View(await _context.User.ToListAsync());
         }
 
