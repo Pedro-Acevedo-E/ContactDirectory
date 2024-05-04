@@ -118,55 +118,26 @@ namespace ContactDirectory.Controllers
             return View(user);
         }
 
-        // GET: User/Edit/5
+        // GET: User/Edit/{id}
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
-        }
-
-        // POST: User/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Email,Password")] User user)
-        {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+            if(UserIsLoggedIn()) {
+                if (id == null) {
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+
+                var user = await _context.User
+                    .Include(u => u.Contacts) 
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                if (user == null) {
+                    return NotFound();
                 }
-                return RedirectToAction(nameof(Index));
+                
+                return View(user);
             }
-            return View(user);
+            
+            return RedirectToAction(nameof(Login));
         }
 
         // GET: User/Delete/5
