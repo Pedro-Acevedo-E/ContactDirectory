@@ -22,8 +22,43 @@ namespace ContactDirectory.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            Console.WriteLine("current session: " + HttpContext.Session.GetString("_UserSession"));
-            return View(await _context.User.ToListAsync());
+            if(UserIsLoggedIn()) {
+                return View(await _context.User.ToListAsync());
+            }
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        public async Task<IActionResult> Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login([Bind("Id,Email,Password")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var usr = await _context.User
+                    .FirstOrDefaultAsync(m => 
+                        m.Email == user.Email && m.Password == user.Password
+                    );
+
+                if (usr == null) {
+                    ViewData["LoginError"] = "Invalid Credentials";
+                    return View();
+                } else {
+                    HttpContext.Session.SetString("_UserSession", usr.Id.ToString());
+                    return RedirectToAction("Details", new {id = usr.Id});
+                }
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Remove("_UserSession");
+            return RedirectToAction(nameof(Login));
         }
 
         // GET: User/Details/5
@@ -51,8 +86,6 @@ namespace ContactDirectory.Controllers
         }
 
         // POST: User/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Email,Password")] User user)
@@ -61,7 +94,22 @@ namespace ContactDirectory.Controllers
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                var usr = await _context.User
+                    .FirstOrDefaultAsync(m => m.Email == user.Email);
+
+                for (int i = 0; Request.Form.ContainsKey($"NewContacts.{i}.Name"); i++) {
+                    Contact contact = new Contact();
+                    contact.Name = Request.Form[$"NewContacts.{i}.Name"];
+                    contact.LastName = Request.Form[$"NewContacts.{i}.LastName"];
+                    contact.PhoneNumber = Request.Form[$"NewContacts.{i}.PhoneNumber"];
+                    contact.UserId = usr.Id;
+                    contact.CreatedAt = DateTime.Now;
+                     _context.Add(contact);
+                    await _context.SaveChangesAsync();
+                }
+                
+                return RedirectToAction(nameof(Login));
             }
             return View(user);
         }
@@ -153,6 +201,10 @@ namespace ContactDirectory.Controllers
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
+        }
+
+        private bool UserIsLoggedIn() {
+            return (HttpContext.Session.GetString("_UserSession") != null);
         }
     }
 }

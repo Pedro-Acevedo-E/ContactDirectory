@@ -1,38 +1,99 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 @model Login.Models.User
 
 @{
     ViewData["Title"] = "Create";
+    Layout = null; 
 }
 
-<h1>Create</h1>
+<!DOCTYPE html>
 
-<h4>User</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<html>
+    <head>
+        <title>Create User</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link rel="stylesheet" href="~/css/directorylayout.css" /></head>
+    <body>
+        <div class="container h-100">
+            <h1>Create User</h1>
+            <div class="contact_card">
+                <hr />
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Email" class="control-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Password" class="control-label"></label>
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <h3>Contacts (optional):</h3>
+                            <div class= "form-group" id="contactsContainer"></div>
+                            <button type="button" class="btn btn-default" id="addContact">Add Contact</button>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+                <div>
+                    <a asp-action="Login">Back to Login</a>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+$(document).ready(function () {
+    var currentIndex = 0; 
+
+    function reduceIndex() {
+        currentIndex = currentIndex - 1;
+    }
+
+    $("#addContact").click(function () {
+        var newContactRow = `
+            <div class="contact-row">
+                <div class="col-md-4">
+                    <label>Name</label>
+                    <input type="text" name="NewContacts.${currentIndex}.Name" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label>Last Name</label>
+                    <input type="text" name="NewContacts.${currentIndex}.LastName" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label>Phone Number</label>
+                    <input type="text" name="NewContacts.${currentIndex}.PhoneNumber" class="form-control" />
+                </div>
+                <button type="button" class="btn btn-danger removeContact">Remove</button>
+            </div>
+        `;
+
+        currentIndex++; 
+
+        $("#contactsContainer").append(newContactRow);
+
+        $(".removeContact").click(function () {
+            reduceIndex();
+            $(this).parent().remove();
+        });
+    });
+});
+</script>
