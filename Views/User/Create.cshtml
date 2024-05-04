@@ -23,7 +23,7 @@
             <div class="contact_card">
                 <hr />
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-10">
                         <form asp-action="Create">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
@@ -36,18 +36,18 @@
                                 <input asp-for="Password" class="form-control" />
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
-                            <h3>Contacts (optional):</h3>
+                            <h4>Contacts (optional):</h4>
                             <div class= "form-group" id="contactsContainer"></div>
                             <button type="button" class="btn btn-default" id="addContact">Add Contact</button>
+                            <hr>
                             <div class="form-group">
                                 <input type="submit" value="Create" class="btn btn-primary" />
                             </div>
+                            <div>
+                                <a asp-action="Login">Back to Login</a>
+                            </div>
                         </form>
                     </div>
-                </div>
-
-                <div>
-                    <a asp-action="Login">Back to Login</a>
                 </div>
             </div>
         </div>
@@ -70,15 +70,15 @@ $(document).ready(function () {
     $("#addContact").click(function () {
         var newContactRow = `
             <div class="contact-row">
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <label>Name</label>
                     <input type="text" name="NewContacts.${currentIndex}.Name" class="form-control" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <label>Last Name</label>
                     <input type="text" name="NewContacts.${currentIndex}.LastName" class="form-control" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <label>Phone Number</label>
                     <input type="text" name="NewContacts.${currentIndex}.PhoneNumber" class="form-control" />
                 </div>
