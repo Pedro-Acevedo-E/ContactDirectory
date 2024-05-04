@@ -61,22 +61,26 @@ namespace ContactDirectory.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-        // GET: User/Details/5
+        // GET: User/Details/{id}
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
+            if(UserIsLoggedIn()) {
+                if (id == null) {
+                    return NotFound();
+                }
+
+                var user = await _context.User
+                    .Include(u => u.Contacts) 
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                if (user == null) {
+                    return NotFound();
+                }
+
+                return View(user);
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
+            return RedirectToAction(nameof(Login));
         }
 
         // GET: User/Create
