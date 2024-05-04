@@ -172,43 +172,59 @@ namespace ContactDirectory.Controllers
             return View(contact);
         }
 
+        //GET
+        public async Task<IActionResult> EditContact(int? id) {
+            if(UserIsLoggedIn()) {
+                if (id == null) {
+                    return NotFound();
+                }
+
+                var contact = await _context.Contact
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                if (contact == null) {
+                    return NotFound();
+                }
+                
+                return View(contact);
+            }
+
+            return RedirectToAction(nameof(Login));
+        }
         
-        // GET: User/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // POST: User/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var user = await _context.User.FindAsync(id);
-            if (user != null)
-            {
-                _context.User.Remove(user);
+        public async Task<IActionResult> EditContact(int id, [Bind("Id,Name,LastName,PhoneNumber,UserId,CreatedAt")] Contact contact) {
+            if(UserIsLoggedIn()) {
+                if (id != contact.Id) {
+                    return NotFound();
+                }
+
+                try {
+                    _context.Update(contact);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException) {
+                    if (!ContactExists(contact.Id)) {
+                        return NotFound();
+                    }
+                    else {
+                        throw;
+                    }
+                }
+
+                return RedirectToAction("Edit", new {id = contact.UserId});
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Login));
         }
 
-        private bool UserExists(int id)
-        {
+        private bool UserExists(int id) {
             return _context.User.Any(e => e.Id == id);
+        }
+
+        private bool ContactExists(int id) {
+            return _context.Contact.Any(e => e.Id == id);
         }
 
         private bool UserIsLoggedIn() {
