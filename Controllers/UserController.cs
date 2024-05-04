@@ -79,6 +79,10 @@ namespace ContactDirectory.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Email,Password")] User user)
         {
+            if(Request.Form[$"ConfirmPassword"] != user.Password) {
+                ViewData["PasswordError"] = "Passwords do not match";
+                return View(user);
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(user);

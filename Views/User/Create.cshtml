@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="~/css/directorylayout.css" /></head>
     <body>
         <div class="container h-100">
-            <h1>Create User</h1>
+            <h1 style="text-align: center;">Create User</h1>
             <div class="contact_card">
                 <hr />
                 <div class="row">
@@ -35,6 +35,11 @@
                                 <label asp-for="Password" class="control-label"></label>
                                 <input asp-for="Password" class="form-control input_pass" type="password"/>
                                 <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Confirm Password</label>
+                                <input type="password" name="ConfirmPassword" class="form-control" />
+                                <span class="text-danger">@ViewData["PasswordError"]</span>
                             </div>
                             <h4>Contacts (optional):</h4>
                             <div class= "form-group" id="contactsContainer"></div>
@@ -82,6 +87,7 @@ $(document).ready(function () {
                     <label>Phone Number</label>
                     <input type="text" name="NewContacts.${currentIndex}.PhoneNumber" class="form-control" />
                 </div>
+                <div></div>
                 <button type="button" class="btn btn-danger removeContact">Remove</button>
             </div>
         `;
