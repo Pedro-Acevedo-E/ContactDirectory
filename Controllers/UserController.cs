@@ -140,6 +140,39 @@ namespace ContactDirectory.Controllers
             return RedirectToAction(nameof(Login));
         }
 
+        public IActionResult CreateContact(int? id)
+        {
+            if(UserIsLoggedIn()) {
+                if (id == null) {
+                    return NotFound();
+                }
+
+                ViewData["CurrentUser"] = id;
+                return View();
+            }
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateContact([Bind("Name,LastName,PhoneNumber,UserId")] Contact contact)
+        {
+            if(ModelState.IsValid) {
+                if(UserIsLoggedIn()) {
+                    contact.CreatedAt = DateTime.Now;
+                    _context.Add(contact);
+                    await _context.SaveChangesAsync();
+                    
+                    return RedirectToAction("Edit", new {id = contact.UserId});
+                }
+
+                return RedirectToAction(nameof(Login));
+            }
+            @ViewData["CurrentUser"] = contact.UserId;
+            return View(contact);
+        }
+
+        
         // GET: User/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
