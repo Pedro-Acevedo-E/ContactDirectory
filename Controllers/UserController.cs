@@ -219,6 +219,45 @@ namespace ContactDirectory.Controllers
             return RedirectToAction(nameof(Login));
         }
 
+        // GET
+        public async Task<IActionResult> DeleteContact(int? id)
+        {
+            if(UserIsLoggedIn()) {
+                if (id == null) {
+                    return NotFound();
+                }
+
+                var contact = await _context.Contact
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (contact == null) {
+                    return NotFound();
+                }
+
+                return View(contact);
+            }
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteContact(int id) {
+            if(UserIsLoggedIn()) {
+                var contact = await _context.Contact
+                    .FindAsync(id);
+                
+                if (contact != null) {
+                    _context.Contact.Remove(contact);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Edit", new {id = contact.UserId});
+            }
+
+            return RedirectToAction(nameof(Login));
+        }
+
         private bool UserExists(int id) {
             return _context.User.Any(e => e.Id == id);
         }

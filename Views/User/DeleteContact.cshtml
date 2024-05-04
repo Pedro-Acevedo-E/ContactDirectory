@@ -1,0 +1,49 @@
+@model Login.Models.Contact
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Delete Contact Page</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link rel="stylesheet" href="~/css/directorylayout.css" />
+    </head>
+    <body>
+        <h1>Delete Contact</h1>
+        <div class="container h-100">
+            <div class="contact_card">
+                <h3>Are you sure you want to delete this contact?</h3>
+                <div>
+                    <hr />
+                    <dl class="column">
+                        <dt class = "col-sm-4">
+                            Name: @Html.DisplayFor(model => model.Name)
+                        </dt>
+                        <dt class = "col-sm-4">
+                            LastName: @Html.DisplayFor(model => model.LastName)
+                        </dt>
+                        <dt class = "col-sm-4">
+                            PhoneNumber: @Html.DisplayFor(model => model.PhoneNumber)
+                        </dt>
+                    </dl>
+                    
+                    <form asp-action="DeleteContact">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="submit" value="Delete" class="btn btn-danger" /> |
+                        <a asp-action="Edit" asp-route-id="@Model.UserId">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </body>
+</html>
