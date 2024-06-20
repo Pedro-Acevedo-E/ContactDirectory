@@ -1,11 +1,47 @@
 	/* Coded with love by Mutiullah Samim */
-    body,
-    html {
+    body, html {
         margin: 0;
         padding: 0;
         height: 100%;
         background: #60a3bc !important;
     }
+
+    .new_user_card {
+        margin: 0 auto;
+        padding: 10px;
+        width: 25%;
+        background: #f39c12;
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        flex-direction: column; 
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 5px;
+    }
+    .contact-row {
+        margin-bottom: 10px;
+        opacity: 0;  /* Initially invisible */
+        transition: opacity 1s ease-in-out;  /* Transition for smooth appearance */
+    } 
+    .normal-btn {
+        width: 100%;
+        background: #c0392b !important;
+        color: white !important;
+        border-radius: 5px;
+    }
+    .remove-contact-btn {
+        width: 100%;
+        background: #c0392b !important;
+        color: white !important;
+        border-radius: 5px;
+        display: none; 
+    }
+
+
+
+
     .user_card {
         height: 400px;
         width: 350px;
